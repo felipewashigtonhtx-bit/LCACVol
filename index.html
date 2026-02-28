@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LCAC Volunteer Program</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+  :root {
+    --purple: #703b9b;
+    --blue: #38b6ff;
+    --green: #86bb3e;
+    --orange: #eb7524;
+    --dark: #04020d;
+    --darker: #010108;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--darker);
+    font-family: 'Century Gothic', 'CenturyGothic', 'AppleGothic', 'Gill Sans', sans-serif;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  /* ── STAR FIELD ── */
+  #stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    width: 900px;
+    margin: 0 auto;
+    padding: 0 0 60px;
+  }
+
+  /* ── GRID OVERLAY ── */
+  .grid-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(56,182,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56,182,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: relative;
+    text-align: center;
+    padding: 50px 20px 30px;
+    overflow: hidden;
+  }
+
+  .header-planet {
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--purple), #1a0030 70%);
+    box-shadow:
+      0 0 60px rgba(112,59,155,0.6),
+      inset -20px -20px 40px rgba(0,0,0,0.5);
+    opacity: 0.7;
+    animation: floatPlanet 8s ease-in-out infinite;
+  }
+  .header-planet::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    width: 320px; height: 70px;
+    border-radius: 50%;
+    border: 3px solid rgba(134,187,62,0.3);
+    box-shadow: 0 0 20px rgba(134,187,62,0.2);
+  }
+
+  .header-planet-left {
+    position: absolute;
+    top: 20px; left: -40px;
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, var(--blue), #001d40 70%);
+    box-shadow:
+      0 0 40px rgba(56,182,255,0.5),
+      inset -10px -10px 25px rgba(0,0,0,0.5);
+    opacity: 0.6;
+    animation: floatPlanet 6s ease-in-out infinite reverse;
+  }
+
+  @keyframes floatPlanet {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--orange), #ff4500);
+    color: #fff;
+    font-family: 'Century Gothic', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 20px;
+    border-radius: 2px;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    margin-bottom: 18px;
+    box-shadow: 0 0 20px rgba(235,117,36,0.5);
+    animation: pulseBadge 2s ease-in-out infinite;
+  }
+  @keyframes pulseBadge {
+    0%, 100% { box-shadow: 0 0 20px rgba(235,117,36,0.5); }
+    50% { box-shadow: 0 0 40px rgba(235,117,36,0.9); }
+  }
+
+  .org-name {
+    font-family: 'Century Gothic', sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 8px;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    text-shadow: 0 0 15px rgba(56,182,255,0.8);
+  }
+
+  .main-title {
+    font-family: 'Century Gothic', sans-serif;
+    font-size: 62px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, #fff 0%, var(--blue) 50%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(56,182,255,0.4));
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+  }
+
+  .subtitle-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .subtitle-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--green), transparent); max-width: 160px; }
+  .subtitle-text {
+    font-size: 14px;
+    letter-spacing: 5px;
+    color: var(--green);
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(134,187,62,0.6);
+  }
+
+  .intro-text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.75);
+    max-width: 620px;
+    margin: 0 auto 30px;
+    text-align: center;
+  }
+
+  .header-cta {
+    display: inline-block;
+    background: transparent;
+    border: 2px solid var(--blue);
+    color: var(--blue);
+    font-family: 'Century Gothic', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    padding: 12px 36px;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    box-shadow: 0 0 25px rgba(56,182,255,0.3), inset 0 0 25px rgba(56,182,255,0.05);
+    transition: all 0.3s;
+    animation: scanline 3s linear infinite;
+  }
+  .header-cta:hover {
+    background: rgba(56,182,255,0.15);
+    box-shadow: 0 0 50px rgba(56,182,255,0.6);
+  }
+  @keyframes scanline {
+    0% { box-shadow: 0 0 25px rgba(56,182,255,0.3), inset 0 0 25px rgba(56,182,255,0.05); }
+    50% { box-shadow: 0 0 40px rgba(56,182,255,0.6), inset 0 0 30px rgba(56,182,255,0.1); }
+    100% { box-shadow: 0 0 25px rgba(56,182,255,0.3), inset 0 0 25px rgba(56,182,255,0.05); }
+  }
+
+  /* ── STAT BAR ── */
+  .stat-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin: 30px 0;
+    border: 1px solid rgba(56,182,255,0.2);
+    background: rgba(56,182,255,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-bar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 60px; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(56,182,255,0.15), transparent);
+    animation: sweep 4s linear infinite;
+  }
+  @keyframes sweep { to { left: 110%; } }
+
+  .stat-item {
+    padding: 18px 10px;
+    text-align: center;
+    border-right: 1px solid rgba(56,182,255,0.15);
+    position: relative;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .stat-item:nth-child(1) .stat-num { color: var(--blue); text-shadow: 0 0 15px rgba(56,182,255,0.7); }
+  .stat-item:nth-child(2) .stat-num { color: var(--green); text-shadow: 0 0 15px rgba(134,187,62,0.7); }
+  .stat-item:nth-child(3) .stat-num { color: var(--orange); text-shadow: 0 0 15px rgba(235,117,36,0.7); }
+  .stat-item:nth-child(4) .stat-num { color: var(--purple); text-shadow: 0 0 15px rgba(112,59,155,0.7); filter: brightness(1.5); }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 44px 0 20px;
+  }
+  .section-label-icon {
+    width: 8px; height: 8px;
+    background: var(--orange);
+    transform: rotate(45deg);
+    box-shadow: 0 0 12px var(--orange);
+    flex-shrink: 0;
+  }
+  .section-label-text {
+    font-size: 10px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--orange);
+    text-shadow: 0 0 10px rgba(235,117,36,0.5);
+    flex-shrink: 0;
+  }
+  .section-label-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(235,117,36,0.4), transparent);
+  }
+
+  /* ── REQUIREMENTS ── */
+  .req-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+  .req-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(56,182,255,0.15);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .req-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+  }
+  .req-card:nth-child(1)::before { background: var(--blue); box-shadow: 0 0 8px var(--blue); }
+  .req-card:nth-child(2)::before { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .req-card:nth-child(3)::before { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+  .req-card:nth-child(4)::before { background: var(--purple); box-shadow: 0 0 8px var(--purple); filter: brightness(1.5); }
+
+  .req-icon { font-size: 22px; margin-bottom: 8px; display: block; }
+  .req-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: rgba(255,255,255,0.5);
+  }
+  .req-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1.3;
+  }
+  .req-card:nth-child(1) .req-value { color: var(--blue); }
+  .req-card:nth-child(2) .req-value { color: var(--green); }
+  .req-card:nth-child(3) .req-value { color: var(--orange); }
+  .req-card:nth-child(4) .req-value { color: #c07aff; }
+
+  /* ── DEPARTMENTS ── */
+  .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+
+  .dept-card {
+    padding: 28px 20px;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  }
+  .dept-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+  }
+  .dept-card-1 { background: linear-gradient(145deg, rgba(56,182,255,0.12), rgba(56,182,255,0.03)); border: 1px solid rgba(56,182,255,0.3); }
+  .dept-card-2 { background: linear-gradient(145deg, rgba(134,187,62,0.12), rgba(134,187,62,0.03)); border: 1px solid rgba(134,187,62,0.3); }
+  .dept-card-3 { background: linear-gradient(145deg, rgba(235,117,36,0.12), rgba(235,117,36,0.03)); border: 1px solid rgba(235,117,36,0.3); }
+
+  .dept-emoji {
+    font-size: 38px;
+    margin-bottom: 12px;
+    display: block;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+  }
+  .dept-name {
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .dept-card-1 .dept-name { color: var(--blue); text-shadow: 0 0 12px rgba(56,182,255,0.6); }
+  .dept-card-2 .dept-name { color: var(--green); text-shadow: 0 0 12px rgba(134,187,62,0.6); }
+  .dept-card-3 .dept-name { color: var(--orange); text-shadow: 0 0 12px rgba(235,117,36,0.6); }
+
+  .dept-tagline {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 14px;
+  }
+  .dept-desc {
+    font-size: 12px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 16px;
+  }
+  .dept-steps-badge {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .dept-card-1 .dept-steps-badge { background: rgba(56,182,255,0.2); color: var(--blue); border: 1px solid rgba(56,182,255,0.3); }
+  .dept-card-2 .dept-steps-badge { background: rgba(134,187,62,0.2); color: var(--green); border: 1px solid rgba(134,187,62,0.3); }
+  .dept-card-3 .dept-steps-badge { background: rgba(235,117,36,0.2); color: var(--orange); border: 1px solid rgba(235,117,36,0.3); }
+
+  /* ── ONBOARDING TIMELINE ── */
+  .onboarding-section {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(112,59,155,0.3);
+    padding: 30px;
+    position: relative;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  }
+  .onboarding-section::before {
+    content: 'MISSION BRIEFING';
+    position: absolute;
+    top: -1px; left: 30px;
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: var(--purple);
+    filter: brightness(1.7);
+    background: var(--darker);
+    padding: 0 10px;
+  }
+
+  .onboarding-title {
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #c07aff;
+    margin-bottom: 6px;
+    text-shadow: 0 0 15px rgba(112,59,155,0.7);
+  }
+  .onboarding-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .step-item:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 900;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .step-item:nth-child(1) .step-num { background: rgba(56,182,255,0.15); border: 1px solid var(--blue); color: var(--blue); box-shadow: 0 0 12px rgba(56,182,255,0.3); }
+  .step-item:nth-child(2) .step-num { background: rgba(134,187,62,0.15); border: 1px solid var(--green); color: var(--green); box-shadow: 0 0 12px rgba(134,187,62,0.3); }
+  .step-item:nth-child(3) .step-num { background: rgba(235,117,36,0.15); border: 1px solid var(--orange); color: var(--orange); box-shadow: 0 0 12px rgba(235,117,36,0.3); }
+  .step-item:nth-child(4) .step-num { background: rgba(112,59,155,0.25); border: 1px solid #c07aff; color: #c07aff; box-shadow: 0 0 12px rgba(112,59,155,0.4); }
+  .step-item:nth-child(5) .step-num { background: rgba(56,182,255,0.15); border: 1px solid var(--blue); color: var(--blue); box-shadow: 0 0 12px rgba(56,182,255,0.3); }
+  .step-item:nth-child(6) .step-num { background: rgba(134,187,62,0.15); border: 1px solid var(--green); color: var(--green); box-shadow: 0 0 12px rgba(134,187,62,0.3); }
+
+  .step-content { flex: 1; }
+  .step-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+  .step-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+  }
+  .step-tag {
+    font-size: 8px;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    align-self: center;
+    flex-shrink: 0;
+  }
+  .tag-online { background: rgba(56,182,255,0.15); color: var(--blue); border: 1px solid rgba(56,182,255,0.3); }
+  .tag-inperson { background: rgba(134,187,62,0.15); color: var(--green); border: 1px solid rgba(134,187,62,0.3); }
+  .tag-required { background: rgba(235,117,36,0.15); color: var(--orange); border: 1px solid rgba(235,117,36,0.3); }
+
+  /* ── ALTERNATIVES ROW ── */
+  .alt-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .alt-card {
+    padding: 20px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .alt-card:hover {
+    border-color: rgba(56,182,255,0.3);
+    background: rgba(56,182,255,0.04);
+  }
+  .alt-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .alt-card:nth-child(1)::after { background: linear-gradient(90deg, transparent, var(--blue), transparent); }
+  .alt-card:nth-child(2)::after { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+  .alt-card:nth-child(3)::after { background: linear-gradient(90deg, transparent, var(--orange), transparent); }
+
+  .alt-icon { font-size: 28px; margin-bottom: 10px; }
+  .alt-title {
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .alt-desc {
+    font-size: 11px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* ── FAQ SECTION ── */
+  .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .faq-item {
+    padding: 16px 18px;
+    background: rgba(255,255,255,0.02);
+    border-left: 2px solid var(--blue);
+    position: relative;
+  }
+  .faq-item:nth-child(even) { border-left-color: var(--green); }
+  .faq-item:nth-child(3n) { border-left-color: var(--orange); }
+  .faq-q {
+    font-size: 11px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .faq-a {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  .footer-panel {
+    margin-top: 40px;
+    background: linear-gradient(135deg, rgba(112,59,155,0.15), rgba(56,182,255,0.08));
+    border: 1px solid rgba(112,59,155,0.4);
+    padding: 36px 40px;
+    text-align: center;
+    position: relative;
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+  }
+  .footer-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(255,255,255,0.01) 10px,
+      rgba(255,255,255,0.01) 20px
+    );
+  }
+  .footer-headline {
+    font-size: 26px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #fff;
+    margin-bottom: 8px;
+    text-shadow: 0 0 30px rgba(56,182,255,0.4);
+    position: relative;
+  }
+  .footer-sub {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-bottom: 26px;
+    position: relative;
+  }
+  .contact-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .contact-item {
+    text-align: center;
+  }
+  .contact-label {
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 4px;
+  }
+  .contact-value {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--blue);
+    text-shadow: 0 0 10px rgba(56,182,255,0.5);
+  }
+  .contact-separator {
+    width: 1px;
+    background: rgba(255,255,255,0.1);
+    align-self: stretch;
+  }
+
+  /* ── DECORATIVE ELEMENTS ── */
+  .corner-deco {
+    position: absolute;
+    width: 20px; height: 20px;
+  }
+  .corner-tl { top: 0; left: 0; border-top: 2px solid var(--blue); border-left: 2px solid var(--blue); }
+  .corner-tr { top: 0; right: 0; border-top: 2px solid var(--blue); border-right: 2px solid var(--blue); }
+  .corner-bl { bottom: 0; left: 0; border-bottom: 2px solid var(--blue); border-left: 2px solid var(--blue); }
+  .corner-br { bottom: 0; right: 0; border-bottom: 2px solid var(--blue); border-right: 2px solid var(--blue); }
+
+  .divider-fancy {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0 6px;
+  }
+  .divider-fancy span { font-size: 8px; letter-spacing: 4px; color: rgba(255,255,255,0.2); text-transform: uppercase; }
+  .divider-fancy::before, .divider-fancy::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  }
+
+  /* ── SCANNING ANIMATION OVERLAY ── */
+  .scan-line {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(56,182,255,0.4), transparent);
+    animation: scanDown 8s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @keyframes scanDown {
+    0% { top: 0; opacity: 1; }
+    100% { top: 100vh; opacity: 0; }
+  }
+
+  /* ── GLOW ORBS ── */
+  .glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+    animation: orbFloat 12s ease-in-out infinite;
+  }
+  .glow-orb-1 { width: 400px; height: 400px; background: var(--purple); top: 10%; left: -10%; animation-delay: 0s; }
+  .glow-orb-2 { width: 300px; height: 300px; background: var(--blue); bottom: 20%; right: -5%; animation-delay: -4s; }
+  .glow-orb-3 { width: 200px; height: 200px; background: var(--green); top: 50%; left: 50%; animation-delay: -8s; }
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(20px, -30px); }
+    66% { transform: translate(-15px, 20px); }
+  }
+
+  /* Print-friendly background */
+  @media print {
+    body { background: #04020d; }
+    #stars-canvas, .scan-line, .glow-orb, .grid-overlay { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<div class="grid-overlay"></div>
+<div class="scan-line"></div>
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+
+<div class="page">
+
+  <!-- ════════════════ HEADER ════════════════ -->
+  <div class="header">
+    <div class="header-planet"></div>
+    <div class="header-planet-left"></div>
+
+    <div style="position:relative; z-index:2;">
+      <div class="badge">🚀 Now Recruiting — Join The Mission</div>
+      <div class="org-name">League City Animal Care</div>
+      <div class="main-title">VOLUNTEER<br>PROGRAM</div>
+      <div class="subtitle-row">
+        <div class="subtitle-line"></div>
+        <div class="subtitle-text">Compassion Beyond the Stars</div>
+        <div class="subtitle-line"></div>
+      </div>
+      <p class="intro-text">
+        LCAC is the City of League City's municipal animal shelter — and YOU are the fuel that keeps this mission airborne. Volunteers log thousands of hours each year, keeping animals clean, loved, and ready for liftoff into forever homes. Ready to make a difference that's truly out of this world?
+      </p>
+      <a href="mailto:LCACvolunteer@leaguecitytx.gov" class="header-cta">Begin Your Mission</a>
+    </div>
+  </div>
+
+  <!-- ════════════════ STAT BAR ════════════════ -->
+  <div class="stat-bar">
+    <div class="stat-item">
+      <div class="stat-num">16+</div>
+      <div class="stat-label">Minimum Age</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4hrs</div>
+      <div class="stat-label">Monthly Minimum</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Departments to Join</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Impact Potential</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ REQUIREMENTS ════════════════ -->
+  <div class="section-label">
+    <div class="section-label-icon"></div>
+    <div class="section-label-text">Mission Prerequisites</div>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="req-grid">
+    <div class="req-card">
+      <span class="req-icon">🪐</span>
+      <div class="req-title">Age Requirement</div>
+      <div class="req-value">16 Years or Older</div>
+    </div>
+    <div class="req-card">
+      <span class="req-icon">⏱️</span>
+      <div class="req-title">Monthly Commitment</div>
+      <div class="req-value">At Least 4 Hours / Month</div>
+    </div>
+    <div class="req-card">
+      <span class="req-icon">🔐</span>
+      <div class="req-title">Security Clearance</div>
+      <div class="req-value">Background Check via AEGIS Required</div>
+    </div>
+    <div class="req-card">
+      <span class="req-icon">👕</span>
+      <div class="req-title">Mission Uniform</div>
+      <div class="req-value">LCAC T-Shirt + Closed-Toe Shoes + Pants</div>
+    </div>
+  </div>
+  <div class="divider-fancy"><span>No prior experience needed — we train all recruits</span></div>
+
+  <!-- ════════════════ DEPARTMENTS ════════════════ -->
+  <div class="section-label" style="margin-top:36px;">
+    <div class="section-label-icon" style="background:var(--blue); box-shadow: 0 0 12px var(--blue);"></div>
+    <div class="section-label-text" style="color:var(--blue); text-shadow: 0 0 10px rgba(56,182,255,0.5);">Choose Your Squadron</div>
+    <div class="section-label-line" style="background: linear-gradient(90deg, rgba(56,182,255,0.4), transparent);"></div>
+  </div>
+
+  <div class="dept-grid">
+    <div class="dept-card dept-card-1">
+      <span class="dept-emoji">🛸</span>
+      <div class="dept-name">General Help</div>
+      <div class="dept-tagline">Operations Command</div>
+      <div class="dept-desc">The backbone of shelter operations. Perfect for those who love variety — from behind-the-scenes tasks to making sure the entire shelter runs at warp speed.</div>
+      <span class="dept-steps-badge">⚡ 5-Step Onboarding</span>
+    </div>
+    <div class="dept-card dept-card-2">
+      <span class="dept-emoji">🐱</span>
+      <div class="dept-name">Cat Department</div>
+      <div class="dept-tagline">Feline Command Unit</div>
+      <div class="dept-desc">Hands-on feline care and socialization. Ideal for cat lovers who want direct animal contact — your purring co-pilots are waiting for you!</div>
+      <span class="dept-steps-badge">⚡ 6-Step Onboarding</span>
+    </div>
+    <div class="dept-card dept-card-3">
+      <span class="dept-emoji">🐶</span>
+      <div class="dept-name">Dog Department</div>
+      <div class="dept-tagline">Canine Corps Elite</div>
+      <div class="dept-desc">Walking, enrichment, and care for shelter dogs. For those who love a tail-wagging co-pilot on every shift — from Green Level pups to Purple Level pros!</div>
+      <span class="dept-steps-badge">⚡ 6-Step Onboarding</span>
+    </div>
+  </div>
+
+  <!-- ════════════════ ONBOARDING ════════════════ -->
+  <div class="section-label" style="margin-top:36px;">
+    <div class="section-label-icon" style="background:var(--green); box-shadow: 0 0 12px var(--green);"></div>
+    <div class="section-label-text" style="color:var(--green); text-shadow: 0 0 10px rgba(134,187,62,0.5);">Launch Sequence — Onboarding Steps</div>
+    <div class="section-label-line" style="background: linear-gradient(90deg, rgba(134,187,62,0.4), transparent);"></div>
+  </div>
+
+  <div class="onboarding-section">
+    <div class="onboarding-title">⚡ Your Path to Clearance</div>
+    <div class="onboarding-sub">Complete these steps to gain full volunteer access · Dog & Cat Departments require 6 steps</div>
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">🚀 Submit Your Application</div>
+          <div class="step-desc">Apply online and create your MyImpact (BetterImpact) account. Select your department and get ready for launch. Not sure which department? You can transfer at any time — just email the team!</div>
+        </div>
+        <span class="step-tag tag-online">Online</span>
+      </div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">📄 Sign Your Onboarding Documents</div>
+          <div class="step-desc">Sign 6 key documents in MyImpact: Mission Statement, Essential Capabilities, Release of Liability, Workplace Culture, Equipment Agreement, and the Volunteer Handbook. Pro tip: use a laptop or tablet — phones make this tricky!</div>
+        </div>
+        <span class="step-tag tag-online">Online</span>
+      </div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">🔐 Pass the Background Check (AEGIS)</div>
+          <div class="step-desc">After your docs are confirmed, AEGIS will email or text you a link to complete your background check. Links expire in 48 hours — contact the team if yours expires! Texas-only history clears in 2–4 days; out-of-state may take up to 2 weeks.</div>
+        </div>
+        <span class="step-tag tag-required">Required</span>
+      </div>
+      <div class="step-item">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <div class="step-title">🎓 Complete Online Training Modules</div>
+          <div class="step-desc">Don't wait for the background check! Start your online training in MyImpact right away. These modules give you everything you need to care for animals safely and effectively — no experience required.</div>
+        </div>
+        <span class="step-tag tag-online">Online</span>
+      </div>
+      <div class="step-item">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <div class="step-title">🐾 Attend Orientation / Education Shift</div>
+          <div class="step-desc">General Help volunteers attend the Basics Orientation. Cat & Dog Department recruits attend Enrichment Education Shifts (Dog: 2 shifts required!). Sign up through MyImpact and arrive ready to learn the ropes in person.</div>
+        </div>
+        <span class="step-tag tag-inperson">In-Person</span>
+      </div>
+      <div class="step-item">
+        <div class="step-num">06</div>
+        <div class="step-content">
+          <div class="step-title">⭐ Dog Dept Only: Coaching Shift Finale</div>
+          <div class="step-desc">The final boss! A veteran Volunteer Coach evaluates your skills and officially clears you for independent dog shifts. Complete this and you're cleared for Green Level dogs — log 40 hours and unlock Purple Level access!</div>
+        </div>
+        <span class="step-tag tag-inperson">In-Person</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ OTHER WAYS TO HELP ════════════════ -->
+  <div class="section-label" style="margin-top:36px;">
+    <div class="section-label-icon" style="background:var(--purple); filter:brightness(1.7); box-shadow: 0 0 12px var(--purple);"></div>
+    <div class="section-label-text" style="color:#c07aff; text-shadow: 0 0 10px rgba(112,59,155,0.7);">Other Ways to Support the Mission</div>
+    <div class="section-label-line" style="background: linear-gradient(90deg, rgba(112,59,155,0.4), transparent);"></div>
+  </div>
+
+  <div class="alt-grid">
+    <div class="alt-card">
+      <div class="alt-icon">👥</div>
+      <div class="alt-title">Group Volunteering</div>
+      <div class="alt-desc">School clubs, corporate teams, and community orgs are welcome! Coordinate a group visit by emailing LCACvolunteer@leaguecitytx.gov — perfect for team-building with a heart.</div>
+    </div>
+    <div class="alt-card">
+      <div class="alt-icon">🏠</div>
+      <div class="alt-title">Foster Program</div>
+      <div class="alt-desc">Temporarily open your home to animals in need — recovering pets, young animals, or those who thrive better outside the shelter. One of the most impactful things you can do!</div>
+    </div>
+    <div class="alt-card">
+      <div class="alt-icon">🎁</div>
+      <div class="alt-title">Donate Supplies</div>
+      <div class="alt-desc">Food, bedding, toys, cleaning supplies — LCAC accepts donations during open shelter hours. Check the current wish list at leaguecitytx.gov/3913/Donate to send exactly what's needed most.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ FAQ ════════════════ -->
+  <div class="section-label" style="margin-top:36px;">
+    <div class="section-label-icon" style="background:var(--orange); box-shadow: 0 0 12px var(--orange);"></div>
+    <div class="section-label-text" style="color:var(--orange); text-shadow: 0 0 10px rgba(235,117,36,0.5);">Mission Intel — FAQ</div>
+    <div class="section-label-line" style="background: linear-gradient(90deg, rgba(235,117,36,0.4), transparent);"></div>
+  </div>
+
+  <div class="faq-grid">
+    <div class="faq-item">
+      <div class="faq-q">Do I need animal experience?</div>
+      <div class="faq-a">Not at all! The training process is designed for complete beginners. All you need is enthusiasm and a love for animals.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I switch departments?</div>
+      <div class="faq-a">Absolutely. Just email the volunteer team and they'll get you transferred. Note that each department has its own onboarding process.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How long before I hear back?</div>
+      <div class="faq-a">Usually within a week. If you haven't heard anything, check your spam folder then follow up with the team directly.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can under-16s get involved?</div>
+      <div class="faq-a">Younger individuals may be able to participate through group volunteering with a school or organization. Contact the team to explore options.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is there a max hours limit?</div>
+      <div class="faq-a">No maximum! Volunteer as often as your schedule allows. Just meet the 4-hour monthly minimum and you're good to go.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What if I can't meet the monthly minimum?</div>
+      <div class="faq-a">Life happens! Just communicate with the volunteer team in advance. Keeping them informed protects your volunteer status.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is MyImpact?</div>
+      <div class="faq-a">It's the volunteer management platform (also called BetterImpact) where you apply, sign documents, complete training, and schedule shifts. Your account is created when you apply.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I need to set up Shelterluv?</div>
+      <div class="faq-a">Yes! Set it up before your first shift for smooth check-in. It's also used for on-site T-shirt purchases (cash & card accepted).</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ FOOTER CTA ════════════════ -->
+  <div class="footer-panel">
+    <div class="corner-deco corner-tl"></div>
+    <div class="corner-deco corner-tr"></div>
+    <div class="corner-deco corner-bl"></div>
+    <div class="corner-deco corner-br"></div>
+    <div class="footer-headline">Ready to Launch? 🚀</div>
+    <div class="footer-sub">Thousands of animals are counting on volunteers like you · Apply online today</div>
+    <div class="contact-row">
+      <div class="contact-item">
+        <div class="contact-label">Email HQ</div>
+        <div class="contact-value">LCACvolunteer@leaguecitytx.gov</div>
+      </div>
+      <div class="contact-separator"></div>
+      <div class="contact-item">
+        <div class="contact-label">Foster Program</div>
+        <div class="contact-value">leaguecitytx.gov/3906/Foster</div>
+      </div>
+      <div class="contact-separator"></div>
+      <div class="contact-item">
+        <div class="contact-label">Donate Supplies</div>
+        <div class="contact-value">leaguecitytx.gov/3913/Donate</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── STAR FIELD ──
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = document.body.scrollHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const COLORS = ['#38b6ff','#703b9b','#86bb3e','#eb7524','#ffffff'];
+const stars = Array.from({length: 280}, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  r: Math.random() * 1.8 + 0.2,
+  color: COLORS[Math.floor(Math.random() * COLORS.length)],
+  twinkleSpeed: Math.random() * 0.02 + 0.005,
+  twinkleOffset: Math.random() * Math.PI * 2,
+  opacity: Math.random() * 0.6 + 0.2
+}));
+
+// Add some "nebula" style larger glowing dots
+const nebulae = Array.from({length: 12}, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  r: Math.random() * 60 + 30,
+  color: COLORS[Math.floor(Math.random() * (COLORS.length - 1))],
+  opacity: Math.random() * 0.03 + 0.01
+}));
+
+let t = 0;
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Nebulae
+  nebulae.forEach(n => {
+    const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r);
+    grad.addColorStop(0, n.color + 'aa');
+    grad.addColorStop(1, 'transparent');
+    ctx.globalAlpha = n.opacity;
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Stars
+  stars.forEach(s => {
+    const twinkle = 0.4 + 0.6 * (Math.sin(t * s.twinkleSpeed * 60 + s.twinkleOffset) * 0.5 + 0.5);
+    ctx.globalAlpha = s.opacity * twinkle;
+    ctx.fillStyle = s.color;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Glow for brighter stars
+    if (s.r > 1.2) {
+      const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
+      grad.addColorStop(0, s.color + '44');
+      grad.addColorStop(1, 'transparent');
+      ctx.globalAlpha = s.opacity * twinkle * 0.5;
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+  ctx.globalAlpha = 1;
+  t++;
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+</script>
+</body>
+</html>
